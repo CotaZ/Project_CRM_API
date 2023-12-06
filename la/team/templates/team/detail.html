@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+  {{ team.name }}
+{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-5">
+    <h1 class="text-2xl font-bold mb-3">{{ team.name }}</h1>
+
+    <a href="{% url 'team:list' %}" class="my-3 bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block">Cambiar de equipo</a>
+
+    {% if team.created_by == request.user %}
+      <a href="{% url 'team:edit' team.id %}" class="my-3 bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block">Editar</a>
+    {% endif %}
+
+    <p class="my-4 font-semibold text-lg mb-2">
+      <strong>Propietario del equipo: </strong>{{ team.created_by }}
+    </p>
+
+    <hr class="my-6 border-t-2 border-gray-300" />
+
+    <h2 class="font-semibold text-lg mb-2">Miembros del equipo</h2>
+
+    <ul>
+      {% for member in team.members.all %}
+        <li class="mb-2">{{ member.username }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

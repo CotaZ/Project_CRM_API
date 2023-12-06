@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+
+{% block title %}LA CRM{% endblock %}
+
+{% block content %}
+  <div class="bg-blue-200 p-8 rounded-lg shadow-lg text-center">
+    <h1 class="text-2xl font-bold text-black my-4 mb-4">Bienvenido a tu cuenta CRM</h1>
+
+    <div class="mb-8 text-left">
+      <h2 class="text-xl font-bold text-black mb-3">Beneficios de usar nuestra CRM</h2>
+      <ul class="list-disc pl-6">
+        <li class="mb-2 text-lg text-gray-600">Mejora la organización y seguimiento de tus clientes.</li>
+        <li class="mb-2 text-lg text-gray-600">Optimiza la gestión de contactos y oportunidades de venta.</li>
+        <li class="mb-2 text-lg text-gray-600">Aumenta la eficiencia en la toma de decisiones estratégicas.</li>
+        <li class="mb-2 text-lg text-gray-600">Facilita la colaboración entre equipos para potenciar el crecimiento.</li>
+      </ul>
+    </div>
+
+    <div class="mb-8 text-left">
+      <h2 class="text-xl font-bold text-black mb-2">Características destacadas</h2>
+      <ul class="list-disc pl-6">
+        <li class="mb-2 text-lg text-gray-600">Interfaz intuitiva y fácil de usar.</li>
+        <li class="mb-2 text-lg text-gray-600">Personalización según las necesidades de tu negocio.</li>
+        <li class="mb-2 text-lg text-gray-600">Seguridad avanzada para proteger la información de tus clientes.</li>
+        <li class="mb-2 text-lg text-gray-600">Informes y análisis detallados para tomar decisiones informadas.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-bold text-black mb-2">¡Únete a nosotros y transforma tu gestión empresarial!</h2>
+      <p class="text-lg text-gray-600 mb-4 ">
+        Descubre cómo nuestra CRM puede impulsar el crecimiento de tu negocio. ¡Regístrate ahora y comienza a
+        disfrutar de las ventajas de una gestión eficiente y centrada en el cliente!
+      </p>
+      <a href="{% url 'userprofile:signup' %}" class="mt-4 mb-4 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded">Invita a tu circulo a Incorporarse</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,75 @@
+- SuperUser: user: lag
+           pass: admin 
+- SuperUser: user: pgc
+           pass: admin 
+- SuperUser: user: bac
+           pass: admin 
+        
+           
+- Lista CRM:
+
+- Crear entorno virtual, instalar django y crear proyecto.
+- Páginas BD/plantillas:
+    - Crear aplicación para páginas.
+    - Crear plantilla base.
+    - Crear portada (front).
+    - Crear acerca de la página.
+    
+- Autenticación:
+    - Crear un modelo de base de datos para perfiles de usuario.
+    - Posible registrarse.
+    - Posible iniciar sesión.
+    - Posible cerrar sesión.
+
+- Panel de control sencillo
+
+- Crear nuevos clientes potenciales
+    - Nueva app de django.
+    - Configurar un modelo de Bases de datos.
+    - Configurar vista y formulario.
+    - Clientes potenciales.
+    - Ver pagina de clientes potenciales.
+
+- Editar y eliminar clientes potenciales
+- Convertir clientes potenciales en clientes.
+- Mostrar lista de clientes.
+    - Mostrar lista detallada de clientes
+- Editar y eliminar clientes.
+- Implementar solución para equipos.
+    - Crear equipos app
+    - Modelar BD equipos.
+    - Crear nuevos equipos.
+    - Cuando crea un cliente potencial, asegúrese de que el equipo esté configurado.
+    - Cuando cree un cliente, asegúrar de que el equipo esté configurado.
+    - Si no eres miembro de un equipo, crear uno.
+    - Si no eres el propietario, haz posible editar team.
+    - Limitar numeros de prospectos.
+    - Limitar numeros de clientes.
+
+- Refactorización
+    - Instalar Tailwind en lugar de usar la CDN.
+    - Agregar espacios de nombres a todas las aplicaciones .
+    - Reemplazar la lista de clientes potenciales con una vista basada en clases.
+    - Reemplazar el detalle de los clientes potenciales con una vista basada en clases.
+    - Reemplazar la eliminación de clientes potenciales con una vista basada en clases
+    - Reemplazar la edición de clientes potenciales con una vista basada en clases.
+    - Reemplazar la adición de clientes potenciales con una vista basada en clases. Y dale un mejor nombre.
+    - Reemplazar la conversión de clientes potenciales con una vista basada en clases
+
+- Exportar información (clientes potenciales, clientes)
+- Reemplazar el envío con el inicio de sesión requerido mixin
+- Mostrar equipo activo en el menú.
+- Página de detalles del equipo con lista de miembros
+- Limpiar base.html con inclusiones
+- Arreglar el estilo para iniciar sesión y registrarse.
+- Arreglar el registro (no debe ser request.user, solo el usuario (líneas 18 y 19)) no necesita tener un perfil de usuario de plan 
+ (luego automáticamente gratuito) para realizar un seguimiento del equipo activo Asegúrate de que el equipo
+- Agregar campo adicional para hacer posible -Asegúrese de que cada
+    -Se reemplaza el selector de equipo codificado de Switch Tean.
+- Desplegar
+
+Faltan: 
+
+Faltan metricas:
+ - Agregar logo de Empresa en el menu 
+ - quitar de navbar los clientes y potenciales clientes y mejorar el diseño de la pagina de inicio y sobre nosotros

@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+  Teams
+{% endblock %}
+
+{% block content %}
+  {% if teams %}
+    <div class="px-6 py-6">
+      <h1 class="text-2xl font-bold mb-6 ">Equipos</h1>
+
+      <div class="grid grid-cols-4 gap-4">
+        {% for team in teams %}
+          <div class="{% if team == active_team %}bg-emerald-100{% else %}bg-gray-100{% endif %} rounded-xl p-6">
+            <h2 class="mb-4 text-xl">{{ team.name }}</h2>
+            <a class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block" href="{% url 'team:activate' team.id %}">Activar equipo</a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <p>No hay equipos disponibles.</p>
+  {% endif %}
+{% endblock %}

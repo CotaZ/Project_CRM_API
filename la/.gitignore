@@ -1,0 +1,34 @@
+# Django specific
+__pycache__/
+*.py[cod]
+
+# MySQL database file
+db.MySQL
+
+# MySQL database settings (sensitive information)
+la/settings/local_settings.py
+
+# Log files
+*.log
+
+# Media files (user-uploaded content)
+media/
+
+# Static files (generated CSS, JavaScript, etc.)
+static/
+
+# Virtual environment
+env/
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Python bytecode cache
+__pycache__/
+
+# Compiled Python files
+*.pyc
+
+# Ignore migrations if you don't want to track them
+la/*/migrations/

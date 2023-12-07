@@ -7,6 +7,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
 from core.views import index, about
+from client.views import clients_api, clients_detapi
 from userprofile.forms import LoginForm
 
 urlpatterns = [
@@ -21,4 +22,6 @@ urlpatterns = [
     path("log-out/", views.LogoutView.as_view(next_page='index'), name='logout'),
 
     path("admin/", admin.site.urls),
+    
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

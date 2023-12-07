@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'team',
     'dashboard',
     'userprofile',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

@@ -1,34 +1,21 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'main.min.css' %}">
-    <link href="/dist/output.css" rel="stylesheet" />
-    <title>
-      {% block title %}
-
-      {% endblock %}
-    </title>
-  </head>
-  <body>
-    
-    {% include 'core/partials/nav.html' %}
-    
-    {% if messages %}
-      <div class="py-6 px-6">
-        {% for message in messages %}
-          <div class="py-4 px-4 bg-teal-300 text-white rounded-xl">
-            {{ message }}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    {% block content %}
-    {% endblock %}
-
-    {% include 'core/partials/footer.html' %}
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'main.min.css' %}" />
+        <link href="/dist/output.css" rel="stylesheet" />
+        <style></style>
+        <title>{% block title %} {% endblock %}</title>
+    </head>
+    <body style="background-image: url('https://www.revistapresencia.net/wp-content/uploads/2020/11/FONDO-PAGINA-WEB.png'); background-size: cover" class="flex flex-col min-h-screen w-screen h-screen object-cover">
+        {% include 'core/partials/nav.html' %} {% if messages %}
+        <div class="py-6 px-6">
+            {% for message in messages %}
+            <div class="py-4 px-4 bg-teal-300 text-white rounded-xl">{{ message }}</div>
+            {% endfor %}
+        </div>
+    </body>
+    {% endif %} {% block content %} {% endblock %} {% include 'core/partials/footer.html' %}
 </html>

@@ -1,5 +1,6 @@
 import csv
 
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -9,6 +10,11 @@ from .forms import AddClientForm, AddCommentForm, AddFileForm
 from .models import Client
 
 from team.models import Team
+
+from .serializers import ClientSerializer
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
 
 @login_required
 def clients_export(request):
@@ -31,12 +37,32 @@ def clients_export(request):
 
     return response
 
+@api_view(['GET','POST'])
+@login_required
+def clients_api(request):
+    if request.method == 'GET':
+        team = request.user.userprofile.active_team
+        clients = team.clients.all()
+        serializer = ClientSerializer(clients, many=True)
+        return Response(serializer.data)
+    
+    if request.method == 'POST':
+        data = request.data
+        serializer = ClientSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Redireccionar a otra página
+    return redirect('otra_pagina')
+
 @login_required
 def clients_list(request):
     team = request.user.userprofile.active_team
     clients = team.clients.all()
 
-    return render(request, "client/clients_list.html", {"clients": clients})
+    return render(request, "client/clients_list.html", {"clients": clients})    
 
 @login_required
 def clients_add_file(request, pk):
@@ -52,7 +78,53 @@ def clients_add_file(request, pk):
         
             return redirect('clients:detail', pk=pk)
     return redirect('clients:detail', pk=pk)    
+
+@api_view(['GET', 'PUT', 'DELETE'])    
+@login_required
+def clients_detapi(request, pk):
+    try:
+        team = request.user.userprofile.active_team
+        client = get_object_or_404(Client, created_by=request.user, pk=pk)
+        client = Client.objects.get(pk=pk)
+    except Client.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ClientSerializer(client)
+        return Response(serializer.data)
     
+    if request.method == 'PUT':
+        serializer = ClientSerializer(client, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        client.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    if request.method == 'POST':
+        form = AddCommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.team = request.user.userprofile.get_active_team()
+            comment.created_by = request.user
+            comment.client = client
+            comment.save()
+
+            return redirect('clients:client', pk=pk)
+    
+    else:
+        form = AddCommentForm()
+
+    return render(request, "client/clients_detail.html", {
+        "client": client, 
+        "form": form, 
+        "fileform" : AddFileForm(),
+    })
+
 @login_required
 def clients_detail(request, pk):
     team = request.user.userprofile.active_team

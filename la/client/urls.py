@@ -1,5 +1,5 @@
 from django.urls import path
-
+from client.views import clients_detapi
 from . import views
 
 app_name = 'clients'
@@ -13,4 +13,7 @@ urlpatterns = [
     path("<int:pk>/add-file/", views.clients_add_file, name='add_file'),
     path("add/", views.clients_add, name="add"),
     path('export/', views.clients_export, name='export'),
+    
+    path('api/', views.clients_api, name='api'),
+    path('detapi/<int:pk>', views.clients_detapi, name='detapi'),
 ]

@@ -7,7 +7,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
 from core.views import index, about
-from client.views import clients_api, clients_detapi
+from client.views import ClientList
 from userprofile.forms import LoginForm
 
 urlpatterns = [

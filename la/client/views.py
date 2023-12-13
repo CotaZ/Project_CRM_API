@@ -1,8 +1,10 @@
 import csv
 
-
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -15,6 +17,8 @@ from .serializers import ClientSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from django.http import Http404
 
 @login_required
 def clients_export(request):
@@ -37,25 +41,24 @@ def clients_export(request):
 
     return response
 
-@api_view(['GET','POST'])
-@login_required
-def clients_api(request):
-    if request.method == 'GET':
-        team = request.user.userprofile.active_team
-        clients = team.clients.all()
-        serializer = ClientSerializer(clients, many=True)
-        return Response(serializer.data)
-    
-    if request.method == 'POST':
-        data = request.data
-        serializer = ClientSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    # Redireccionar a otra página
-    return redirect('otra_pagina')
+class ClientList(LoginRequiredMixin, APIView):
+    def get(self, request):
+        if request.method == 'GET':
+            team = request.user.userprofile.active_team
+            clients = team.clients.all()
+            serializer = ClientSerializer(clients, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        if request.method == 'POST':
+            serializer = ClientSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Redireccionar a otra página
+        return redirect('otra_pagina')
 
 @login_required
 def clients_list(request):
@@ -79,51 +82,37 @@ def clients_add_file(request, pk):
             return redirect('clients:detail', pk=pk)
     return redirect('clients:detail', pk=pk)    
 
-@api_view(['GET', 'PUT', 'DELETE'])    
-@login_required
-def clients_detapi(request, pk):
-    try:
-        team = request.user.userprofile.active_team
-        client = get_object_or_404(Client, created_by=request.user, pk=pk)
-        client = Client.objects.get(pk=pk)
-    except Client.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class Client_DetApi(LoginRequiredMixin, APIView):
+    def get_object(self, pk):
+        team = self.request.user.userprofile.active_team
+        return get_object_or_404(Client, created_by=self.request.user, pk=pk)
 
-    if request.method == 'GET':
+    def get(self, request, pk):
+        client = self.get_object(pk)
         serializer = ClientSerializer(client)
         return Response(serializer.data)
-    
-    if request.method == 'PUT':
+
+    def put(self, request, pk):
+        client = self.get_object(pk)
         serializer = ClientSerializer(client, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    if request.method == 'DELETE':
+
+    def delete(self, request, pk):
+        client = self.get_object(pk)
         client.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    if request.method == 'POST':
-        form = AddCommentForm(request.POST)
 
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.team = request.user.userprofile.get_active_team()
-            comment.created_by = request.user
-            comment.client = client
-            comment.save()
-
-            return redirect('clients:client', pk=pk)
-    
-    else:
-        form = AddCommentForm()
-
-    return render(request, "client/clients_detail.html", {
-        "client": client, 
-        "form": form, 
-        "fileform" : AddFileForm(),
-    })
+    def post(self, request, pk):
+        client = self.get_object(pk)
+        serializer = ClientSerializer(client, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            # Devuelve una respuesta JSON en lugar de redirigir o renderizar plantillas
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @login_required
 def clients_detail(request, pk):

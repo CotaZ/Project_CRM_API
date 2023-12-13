@@ -1,6 +1,6 @@
 from django.urls import path
-from client.views import clients_detapi
 from . import views
+from .views import ClientList, Client_DetApi
 
 app_name = 'clients'
 
@@ -14,6 +14,6 @@ urlpatterns = [
     path("add/", views.clients_add, name="add"),
     path('export/', views.clients_export, name='export'),
     
-    path('api/', views.clients_api, name='api'),
-    path('detapi/<int:pk>', views.clients_detapi, name='detapi'),
+    path('api/', ClientList.as_view(), name='api'),
+    path('detapi/<int:pk>', Client_DetApi.as_view(), name='detapi'),
 ]

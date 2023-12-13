@@ -1,7 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views import ClientList, Client_DetApi
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register('clients', views.ClientViewSets)
 app_name = 'clients'
 
 urlpatterns = [
@@ -14,6 +17,7 @@ urlpatterns = [
     path("add/", views.clients_add, name="add"),
     path('export/', views.clients_export, name='export'),
     
-    path('api/', ClientList.as_view(), name='api'),
+    path('api/', ClientList.as_view(), name='api'),  
     path('detapi/<int:pk>', Client_DetApi.as_view(), name='detapi'),
+    path('router/', include(router.urls), name='router'),
 ]

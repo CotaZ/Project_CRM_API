@@ -18,7 +18,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework import generics, mixins
 from django.http import Http404
+from rest_framework import viewsets
+from rest_framework.decorators import action
+
+
+
 
 @login_required
 def clients_export(request):
@@ -41,7 +47,14 @@ def clients_export(request):
 
     return response
 
-class ClientList(LoginRequiredMixin, APIView):
+class ClientViewSets(LoginRequiredMixin, viewsets.ModelViewSet):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+
+class ClientList(LoginRequiredMixin, generics.ListCreateAPIView):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+
     def get(self, request):
         if request.method == 'GET':
             team = request.user.userprofile.active_team
@@ -82,37 +95,37 @@ def clients_add_file(request, pk):
             return redirect('clients:detail', pk=pk)
     return redirect('clients:detail', pk=pk)    
 
-class Client_DetApi(LoginRequiredMixin, APIView):
-    def get_object(self, pk):
+class Client_DetApi(LoginRequiredMixin, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+    
+    def get_object(self):
         team = self.request.user.userprofile.active_team
+        pk = self.kwargs.get('pk')
         return get_object_or_404(Client, created_by=self.request.user, pk=pk)
 
-    def get(self, request, pk):
-        client = self.get_object(pk)
+    def get(self, request, *args, **kwargs):
+        client = self.get_object()
         serializer = ClientSerializer(client)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        client = self.get_object(pk)
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+    @action(detail=True, methods=['post'])
+    def custom_action(self, request, *args, **kwargs):
+        client = self.get_object()
         serializer = ClientSerializer(client, data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        client = self.get_object(pk)
-        client.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def post(self, request, pk):
-        client = self.get_object(pk)
-        serializer = ClientSerializer(client, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            # Devuelve una respuesta JSON en lugar de redirigir o renderizar plantillas
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @login_required
 def clients_detail(request, pk):
